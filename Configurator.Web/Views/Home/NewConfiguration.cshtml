@@ -1,0 +1,72 @@
+@model ConfigurationViewModel
+@{
+    ViewData["Title"] = "New Configuration";
+}
+
+<div class="col">
+    @using (Html.BeginForm(new { action = "AddConfiguration", controller = "home" })) {
+        <div class="form-row">
+            <div class="col-1">
+                <button id="addConfig" type="button" class="btn btn-primary mb-2 w-100">Add</button>
+            </div>
+            <div class="col-1">
+                <button id="deleteConfig" type="button" class="btn btn-danger mb-2 w-100">Delete</button>
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-success mb-2 w-100">Save</button>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group p-2">
+                <label for="configName">Configuration Name</label>
+                <input type="text" name="Model.ConfigurationName" class="form-control" id="configName" placeholder="Name">
+            </div>
+            <div class="form-group p-2">
+                <label for="configType">Type</label>
+                <select class="form-control" id="configType" name="Model.ConfigType">
+                    <option value="json" selected>JSON</option>
+                    <option value="xml">XML</option>
+                </select>
+            </div>
+        </div>
+        <div id="configurations" class="row col-6">
+            <input type="hidden" value="0" id="totalConfig">
+            <div id="row0" class="form-row p-2">
+                <div class="col">
+                    <input type="text" name="Model.Config[0].Key" id="key0" class="form-control" placeholder="Key">
+                </div>
+                <div class="col">
+                    <input type="text" name="Model.Config[0].Value" id="value0" class="form-control" placeholder="Value">
+                </div>
+                <input type="hidden" name="Model.Values.Index" value="0" />
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $('#addConfig').on('click', add);
+        $('#deleteConfig').on('click', remove);
+
+        function add() {
+            var currentTotalConfig = $('#totalConfig').val();
+            var newTotalConfig = parseInt(currentTotalConfig) + 1;
+            var newConfig = `<div id="row${newTotalConfig}" class="form-row p-2">
+                <div class="col"><input type="text" name="Model.Config[${newTotalConfig}].Key" id="key${newTotalConfig}" class="form-control" placeholder="Key"></div>
+                <div class="col"><input type="text" name="Model.Config[${newTotalConfig}].Value" id="value${newTotalConfig}" class="form-control" placeholder="Value"></div>
+                <input type="hidden" name="Model.Values.Index" value="${newTotalConfig}" />
+                </div>`;
+            $('#configurations').append(newConfig);          
+            $('#totalConfig').val(newTotalConfig);
+        }
+
+        function remove() {
+            var lastTotalConfig = $('#totalConfig').val();
+            if (lastTotalConfig > 1) {
+                $('#row' + lastTotalConfig).remove();
+                $('#totalConfig').val(lastTotalConfig - 1);
+            }
+        }
+    </script>
+}
