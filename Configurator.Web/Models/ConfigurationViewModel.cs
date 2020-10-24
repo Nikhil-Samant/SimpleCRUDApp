@@ -6,6 +6,7 @@ namespace Configurator.Web.Models
 {
     public class ConfigurationViewModel
     {
+        public int Id { get; set; }
         public ConfigurationViewModel()
         {
             this.Config = new Dictionary<string, string>();

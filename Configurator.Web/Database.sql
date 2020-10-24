@@ -1,6 +1,8 @@
 Create Database Configurator;
+Go
 
 Use Configurator;
+Go
 
 Create table Configuration (
     Id INT IDENTITY(1,1),

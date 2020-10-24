@@ -8,6 +8,7 @@ namespace Configurator.Web.Interfaces
     {
         IList<Configuration> GetConfigs();
         void AddConfig(Configuration newConfig);
+        void UpdateConfig(Configuration updatedConfig);
         void DeleteConfig(int Id);
         Configuration GetConfig(int Id);
     }

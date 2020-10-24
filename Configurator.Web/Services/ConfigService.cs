@@ -16,17 +16,48 @@ namespace Configurator.Web.Services
         }
         public void AddConfig(Configuration newConfig)
         {
-            _context.Configurations.Add(newConfig);
-            _context.SaveChanges();
+            try
+            {
+                _context.Configurations.Add(newConfig);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void UpdateConfig(Configuration updatedConfig)
+        {
+            try
+            {
+                var configToBeUpdated = _context.Configurations.Where(c => c.Id == updatedConfig.Id).SingleOrDefault();
+                configToBeUpdated.ConfigurationName = updatedConfig.ConfigurationName;
+                configToBeUpdated.ConfigType = updatedConfig.ConfigType;
+                configToBeUpdated.Config = updatedConfig.Config;
+                _context.Configurations.Update(configToBeUpdated);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public void DeleteConfig(int Id)
         {
-            var configToBeDeleted = _context.Configurations.Where(c => c.Id == Id).SingleOrDefault();
-            if (configToBeDeleted != null)
+            try
             {
-                _context.Configurations.Remove(configToBeDeleted);
-                _context.SaveChanges();
+                var configToBeDeleted = _context.Configurations.Where(c => c.Id == Id).SingleOrDefault();
+                if (configToBeDeleted != null)
+                {
+                    _context.Configurations.Remove(configToBeDeleted);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
 

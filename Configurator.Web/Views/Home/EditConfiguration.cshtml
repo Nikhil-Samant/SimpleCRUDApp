@@ -1,0 +1,81 @@
+@model ConfigurationViewModel
+@{
+    ViewData["Title"] = "Edit Configuration";
+    int counter = 0;
+}
+
+<div class="col">
+    @using (Html.BeginForm(new { action = "EditConfiguration", controller = "home" })) {
+        <input type="hidden" name="Model.Id" value="@Model.Id">
+        <div class="form-row">
+            <div class="col-1">
+                <button id="addConfig" type="button" class="btn btn-primary mb-2 w-100">Add</button>
+            </div>
+            <div class="col-1">
+                <button id="deleteConfig" type="button" class="btn btn-danger mb-2 w-100">Delete</button>
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-success mb-2 w-100">Save</button>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group p-2">
+                <label for="configName">Configuration Name</label>
+                <input type="text" name="Model.ConfigurationName" class="form-control" id="configName" placeholder="Name" value="@Model.ConfigurationName">
+            </div>
+            <div class="form-group p-2">
+                <label for="configType">Type</label>
+                <select class="form-control" id="configType" name="Model.ConfigType">
+                    <option value="json" selected>JSON</option>
+                    <option value="xml">XML</option>
+                </select>
+            </div>
+        </div>
+        <div id="configurations" class="row col-6">
+            <input type="hidden" value="@Model.Config.Count" id="totalConfig">
+            @* @for (int i = 0; i < Model.Config.Count; i++) *@
+            @foreach (var item in Model.Config)
+            {
+                <div id="@("row"+counter)" class="form-row p-2">
+                    <div class="col">
+                        <input type="text" name="Model.Config[@counter].Key" id="@("key"+counter)" class="form-control" placeholder="Key" value="@item.Key">
+                    </div>
+                    <div class="col">
+                        <input type="text" name="Model.Config[@counter].Value" id="@("value"+counter)" class="form-control" placeholder="Value" value="@item.Value">
+                    </div>
+                    <input type="hidden" name="Model.Values.Index" value="@counter" />
+                </div>
+                counter++;            
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $('#addConfig').on('click', add);
+        $('#deleteConfig').on('click', remove);
+
+        function add() {
+            var currentTotalConfig = $('#totalConfig').val();
+            var newTotalConfig = parseInt(currentTotalConfig);
+            var newConfig = `<div id="row${newTotalConfig}" class="form-row p-2">
+                <div class="col"><input type="text" name="Model.Config[${newTotalConfig}].Key" id="key${newTotalConfig}" class="form-control" placeholder="Key"></div>
+                <div class="col"><input type="text" name="Model.Config[${newTotalConfig}].Value" id="value${newTotalConfig}" class="form-control" placeholder="Value"></div>
+                <input type="hidden" name="Model.Values.Index" value="${newTotalConfig}" />
+                </div>`;
+            $('#configurations').append(newConfig); 
+            newTotalConfig = newTotalConfig + 1;         
+            $('#totalConfig').val(newTotalConfig);
+        }
+
+        function remove() {
+            var lastTotalConfig = $('#totalConfig').val();
+            lastTotalConfig = lastTotalConfig - 1;
+            if (lastTotalConfig >= 1) {
+                $('#row' + lastTotalConfig).remove();
+                $('#totalConfig').val(lastTotalConfig);
+            }
+        }
+    </script>
+}
